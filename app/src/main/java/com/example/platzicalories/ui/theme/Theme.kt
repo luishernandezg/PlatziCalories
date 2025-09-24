@@ -9,7 +9,10 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
@@ -56,3 +59,14 @@ fun PlatziCaloriesTheme(
         content = content
     )
 }
+
+data class Dimensions(
+    val default: Dp = 0.dp,
+    val spaceExtraSmall: Dp = 4.dp,
+    val spaceSmall: Dp = 8.dp,
+    val spaceMedium: Dp = 16.dp,
+    val spaceLarge: Dp = 32.dp,
+    val spaceExtraLarge: Dp = 64.dp,
+)
+
+val LocalSpacing = compositionLocalOf { Dimensions() }
