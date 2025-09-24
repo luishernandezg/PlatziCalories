@@ -2,6 +2,9 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.hilt.gradle.plugin)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.room)
 }
 
 android {
@@ -37,6 +40,9 @@ android {
     buildFeatures {
         compose = true
     }
+    room {
+        schemaDirectory("$projectDir/schemas")
+    }
 }
 
 dependencies {
@@ -49,6 +55,47 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+
+    //Google fonts
+    implementation(libs.androidx.ui.text.google.fonts)
+
+    //Hilt
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+    ksp(libs.dagger.compiler)
+
+    //Navigation Compose
+    implementation(libs.jetbrains.compose.navigation)
+    //implementation(libs.androidx.hilt.navigation.compose)
+
+    //Coil3
+    implementation(libs.coil.compose)
+    implementation(libs.coil.compose.core)
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
+
+    //Moshi
+    implementation(libs.moshi)
+    ksp(libs.moshi.codegen)
+    implementation(libs.moshi.kotlin)
+
+
+    //Retrofit
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.moshi)
+
+    //OkHttp
+    implementation(libs.okhttp)
+    implementation(libs.okhttp.logging)
+
+    //Room
+    implementation(libs.room)
+    implementation(libs.room.ktx)
+    ksp(libs.room.compiler)
+
+    //Kotlinx Serialization
+    implementation(libs.kotlinx.serialization.json)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
