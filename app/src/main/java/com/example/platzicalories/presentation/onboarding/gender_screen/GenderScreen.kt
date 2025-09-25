@@ -72,7 +72,6 @@ fun GenderScreen(onNextScreen: () -> Unit,) {
                     textStyle = MaterialTheme.typography.titleSmall
                         .copy(fontWeight = FontWeight.Normal)
                 )
-
             }
 
         }
