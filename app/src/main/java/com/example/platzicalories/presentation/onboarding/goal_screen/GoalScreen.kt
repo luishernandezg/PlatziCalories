@@ -1,4 +1,4 @@
-package com.example.platzicalories.presentation.onboarding.gender_screen
+package com.example.platzicalories.presentation.onboarding.goal_screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -25,7 +25,7 @@ import com.example.platzicalories.ui.theme.LocalSpacing
 import com.example.platzicalories.ui.theme.PlatziCaloriesTheme
 
 @Composable
-fun GenderScreen(onNextScreen: () -> Unit,) {
+fun GoalScreen(onNextScreen: () -> Unit,) {
 
     val spacing = LocalSpacing.current
 
@@ -40,13 +40,13 @@ fun GenderScreen(onNextScreen: () -> Unit,) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Text(text = stringResource(R.string.whats_your_gender),
+            Text(text = stringResource(R.string.lose_keep_or_gain_weight),
                 style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.onSurface
             )
             Spacer(modifier = Modifier.height(spacing.spaceMedium))
             Row {
-                SelectableButton(text = stringResource(R.string.male),
+                SelectableButton(text = stringResource(R.string.lose),
                     isSelected = true,
                     color = MaterialTheme.colorScheme.primary,
                     selectedTextColor = MaterialTheme.colorScheme.onPrimary,
@@ -55,7 +55,7 @@ fun GenderScreen(onNextScreen: () -> Unit,) {
                         .copy(fontWeight = FontWeight.Normal)
                 )
                 Spacer(modifier = Modifier.width(spacing.spaceMedium))
-                SelectableButton(text = stringResource(R.string.female),
+                SelectableButton(text = stringResource(R.string.keep),
                     isSelected = false,
                     color = MaterialTheme.colorScheme.primary,
                     selectedTextColor = MaterialTheme.colorScheme.onPrimary,
@@ -64,7 +64,7 @@ fun GenderScreen(onNextScreen: () -> Unit,) {
                         .copy(fontWeight = FontWeight.Normal)
                 )
                 Spacer(modifier = Modifier.width(spacing.spaceMedium))
-                SelectableButton(text = stringResource(R.string.other),
+                SelectableButton(text = stringResource(R.string.gain),
                     isSelected = false,
                     color = MaterialTheme.colorScheme.primary,
                     selectedTextColor = MaterialTheme.colorScheme.onPrimary,
@@ -74,7 +74,6 @@ fun GenderScreen(onNextScreen: () -> Unit,) {
                 )
 
             }
-
         }
         ActionButton(text = stringResource(R.string.next)
             , onClick = {onNextScreen()},
@@ -88,8 +87,8 @@ fun GenderScreen(onNextScreen: () -> Unit,) {
     showSystemUi = true
 )
 @Composable
-fun GenderScreenPreview() {
+private fun GoalScreenPreview() {
     PlatziCaloriesTheme {
-        GenderScreen(onNextScreen = {})
+        GoalScreen(onNextScreen = {})
     }
 }
