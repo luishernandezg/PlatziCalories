@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import com.example.platzicalories.presentation.onboarding.activity_level_screen.ActivityLevelScreen
 import com.example.platzicalories.presentation.onboarding.age_screen.AgeScreen
 import com.example.platzicalories.presentation.onboarding.gender_screen.GenderScreen
+import com.example.platzicalories.presentation.onboarding.gender_screen.GenderViewModel
 import com.example.platzicalories.presentation.onboarding.goal_screen.GoalScreen
 import com.example.platzicalories.presentation.onboarding.height_screen.HeightScreen
 import com.example.platzicalories.presentation.onboarding.nutrient_screen.NutrientGoalScreen
@@ -21,6 +22,7 @@ import com.example.platzicalories.presentation.tracker_overview.TrackerOverviewS
 fun NavigationRoot(
     navHostController: NavHostController
 ){
+    val genderViewModel = GenderViewModel()
     Box(
         modifier = Modifier.fillMaxSize()
     ){
@@ -34,9 +36,12 @@ fun NavigationRoot(
                 }
             }
             composable<GenderScreenRoute>{
-                GenderScreen{
-                    navHostController.navigate(AgeScreenRoute)
-                }
+                GenderScreen(
+                    onNextScreen = {
+                        navHostController.navigate(AgeScreenRoute)
+                    },
+                    genderViewModel = genderViewModel
+                )
             }
             composable<AgeScreenRoute>{
                 AgeScreen{

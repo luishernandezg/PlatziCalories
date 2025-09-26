@@ -13,21 +13,38 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.platzicalories.R
+import com.example.platzicalories.core.domain.model.Gender
+import com.example.platzicalories.core.domain.util.UiEvent
 import com.example.platzicalories.presentation.onboarding.components.ActionButton
 import com.example.platzicalories.presentation.onboarding.components.SelectableButton
 import com.example.platzicalories.ui.theme.LocalSpacing
 import com.example.platzicalories.ui.theme.PlatziCaloriesTheme
 
 @Composable
-fun GenderScreen(onNextScreen: () -> Unit,) {
+fun GenderScreen(onNextScreen: () -> Unit,
+                 genderViewModel: GenderViewModel = viewModel()
+) {
 
     val spacing = LocalSpacing.current
+
+    // This is launch in the beginning of the composable
+    // it help to setup a default value for the Gender selector
+    LaunchedEffect(key1 = true) {
+        genderViewModel.uiEvent.collect { event ->
+            when(event) {
+                is UiEvent.Success -> onNextScreen()
+                else -> Unit
+            }
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -47,28 +64,34 @@ fun GenderScreen(onNextScreen: () -> Unit,) {
             Spacer(modifier = Modifier.height(spacing.spaceMedium))
             Row {
                 SelectableButton(text = stringResource(R.string.male),
-                    isSelected = true,
+                    isSelected = genderViewModel.selectedGender is Gender.Male,
                     color = MaterialTheme.colorScheme.primary,
                     selectedTextColor = MaterialTheme.colorScheme.onPrimary,
-                    onClick = { /*TODO*/ },
+                    onClick = {
+                        genderViewModel.onGenderClick(Gender.Male)
+                    },
                     textStyle = MaterialTheme.typography.titleSmall
                         .copy(fontWeight = FontWeight.Normal)
                 )
                 Spacer(modifier = Modifier.width(spacing.spaceMedium))
                 SelectableButton(text = stringResource(R.string.female),
-                    isSelected = false,
+                    isSelected = genderViewModel.selectedGender is Gender.Female,
                     color = MaterialTheme.colorScheme.primary,
                     selectedTextColor = MaterialTheme.colorScheme.onPrimary,
-                    onClick = { /*TODO*/ },
+                    onClick = {
+                        genderViewModel.onGenderClick(Gender.Female)
+                    },
                     textStyle = MaterialTheme.typography.titleSmall
                         .copy(fontWeight = FontWeight.Normal)
                 )
                 Spacer(modifier = Modifier.width(spacing.spaceMedium))
                 SelectableButton(text = stringResource(R.string.other),
-                    isSelected = false,
+                    isSelected = genderViewModel.selectedGender is Gender.Other,
                     color = MaterialTheme.colorScheme.primary,
                     selectedTextColor = MaterialTheme.colorScheme.onPrimary,
-                    onClick = { /*TODO*/ },
+                    onClick = {
+                        genderViewModel.onGenderClick(Gender.Other)
+                    },
                     textStyle = MaterialTheme.typography.titleSmall
                         .copy(fontWeight = FontWeight.Normal)
                 )
