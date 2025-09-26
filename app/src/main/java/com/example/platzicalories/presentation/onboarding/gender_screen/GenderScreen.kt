@@ -99,7 +99,7 @@ fun GenderScreen(onNextScreen: () -> Unit,
 
         }
         ActionButton(text = stringResource(R.string.next)
-            , onClick = {onNextScreen()},
+            , onClick = {genderViewModel.onNextClick()},
             modifier = Modifier.align(Alignment.BottomEnd),
         )
     }

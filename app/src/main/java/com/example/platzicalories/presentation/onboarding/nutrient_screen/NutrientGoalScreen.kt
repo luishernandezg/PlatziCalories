@@ -13,29 +13,50 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.platzicalories.R
+import com.example.platzicalories.core.domain.util.UiEvent
 import com.example.platzicalories.presentation.onboarding.components.ActionButton
 import com.example.platzicalories.presentation.onboarding.components.UnitTextField
 import com.example.platzicalories.ui.theme.LocalSpacing
 import com.example.platzicalories.ui.theme.PlatziCaloriesTheme
 
 @Composable
-fun NutrientGoalScreen(onNextScreen: () -> Unit){
+fun NutrientGoalScreen(
+    snackbarState: SnackbarHostState,
+    onNextScreen: () -> Unit,
+    nutrientGoalViewModel: NutrientGoalViewModel
+){
     val spacing = LocalSpacing.current
-    var carbs by remember { mutableStateOf("40") }
-    var proteins by remember { mutableStateOf("30") }
-    var fats by remember { mutableStateOf("30") }
+    val context = LocalContext.current
+
+    LaunchedEffect(key1 = true) {
+        nutrientGoalViewModel.uiEvent.collect { event ->
+            when (event) {
+                is UiEvent.Success -> onNextScreen()
+                is UiEvent.ShowSnackbar -> {
+                    snackbarState.showSnackbar(
+                        message = event.message.asString(context)
+                    )
+                }
+
+                else -> Unit
+            }
+        }
+    }
 
     Box(modifier = Modifier
         .fillMaxSize()
@@ -55,34 +76,48 @@ fun NutrientGoalScreen(onNextScreen: () -> Unit){
             )
             Spacer(modifier = Modifier.height(spacing.spaceMedium))
             UnitTextField(
-                value = carbs,
-                onValueChange = {},
+                value = nutrientGoalViewModel.state.carbsRatio ,
+                onValueChange = {
+                    nutrientGoalViewModel.onEvent(
+                        NutrientGoalEvent.OnCarbRatioEnter(it)
+                    )
+                },
                 unit = stringResource(id = R.string.carbs)
             )
             Spacer(modifier = Modifier.height(spacing.spaceMedium))
             UnitTextField(
-                value = proteins,
-                onValueChange = {},
+                value = nutrientGoalViewModel.state.proteinRatio,
+                onValueChange = {
+                    nutrientGoalViewModel.onEvent(
+                        NutrientGoalEvent.OnProteinRatioEnter(it)
+                    )
+                },
                 unit = stringResource(id = R.string.protein)
             )
             Spacer(modifier = Modifier.height(spacing.spaceMedium))
             UnitTextField(
-                value = fats,
-                onValueChange = {},
+                value = nutrientGoalViewModel.state.fatRatio,
+                onValueChange = {
+                    nutrientGoalViewModel.onEvent(
+                        NutrientGoalEvent.OnFatRatioEnter(it)
+                    )
+                },
                 unit = stringResource(id = R.string.fat)
             )
         }
         ActionButton(text = stringResource(R.string.next)
-            , onClick = {onNextScreen()},
+            , onClick = {
+                nutrientGoalViewModel.onEvent(NutrientGoalEvent.OnNextClick)
+            },
             modifier = Modifier.align(Alignment.BottomEnd),
         )
 
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-private fun NutrientGoalScreenPreview() {
-    PlatziCaloriesTheme { NutrientGoalScreen(onNextScreen = {}) }
-
-}
+//@Preview(showBackground = true, showSystemUi = true)
+//@Composable
+//private fun NutrientGoalScreenPreview() {
+//    PlatziCaloriesTheme { NutrientGoalScreen(onNextScreen = {}) }
+//
+//}

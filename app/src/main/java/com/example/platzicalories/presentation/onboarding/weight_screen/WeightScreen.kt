@@ -21,6 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -31,9 +32,13 @@ import com.example.platzicalories.ui.theme.LocalSpacing
 import com.example.platzicalories.ui.theme.PlatziCaloriesTheme
 
 @Composable
-fun WeightScreen(onNextScreen: () -> Unit){
+fun WeightScreen(
+    weightViewModel: WeightViewModel,
+    onNextScreen: () -> Unit){
+
     val spacing = LocalSpacing.current
     var weight by remember { mutableStateOf("180") }
+    var context = LocalContext.current
 
     Box(modifier = Modifier
         .fillMaxSize()
@@ -53,21 +58,21 @@ fun WeightScreen(onNextScreen: () -> Unit){
             )
             Spacer(modifier = Modifier.height(spacing.spaceMedium))
             UnitTextField(
-                value = weight,
-                onValueChange = {},
+                value = weightViewModel.weight,
+                onValueChange = weightViewModel::onWeightEnter,
                 unit = stringResource(id = R.string.kg)
             )
         }
         ActionButton(text = stringResource(R.string.next)
-            , onClick = {onNextScreen()},
+            , onClick = weightViewModel::onNextClick,
             modifier = Modifier.align(Alignment.BottomEnd),
         )
 
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun WeightScreenPreview() {
-    PlatziCaloriesTheme { WeightScreen(onNextScreen = {}) }
-}
+//@Preview(showBackground = true, showSystemUi = true)
+//@Composable
+//fun WeightScreenPreview() {
+//    PlatziCaloriesTheme { WeightScreen(onNextScreen = {}) }
+//}

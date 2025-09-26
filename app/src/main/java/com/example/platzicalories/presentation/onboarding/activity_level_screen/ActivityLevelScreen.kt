@@ -13,21 +13,38 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.platzicalories.R
+import com.example.platzicalories.core.domain.model.ActivityLevel
+import com.example.platzicalories.core.domain.util.UiEvent
 import com.example.platzicalories.presentation.onboarding.components.ActionButton
 import com.example.platzicalories.presentation.onboarding.components.SelectableButton
 import com.example.platzicalories.ui.theme.LocalSpacing
 import com.example.platzicalories.ui.theme.PlatziCaloriesTheme
 
 @Composable
-fun ActivityLevelScreen(onNextScreen: () -> Unit,) {
+fun ActivityLevelScreen(
+    activityLevelViewModel: ActivityLevelViewModel,
+    onNextScreen: () -> Unit,
+    ) {
 
     val spacing = LocalSpacing.current
+    val context = LocalContext.current
+
+    LaunchedEffect(key1 = true) {
+        activityLevelViewModel.uiEvent.collect { event ->
+            when(event) {
+                is UiEvent.Success -> onNextScreen()
+                else -> Unit
+            }
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -47,28 +64,34 @@ fun ActivityLevelScreen(onNextScreen: () -> Unit,) {
             Spacer(modifier = Modifier.height(spacing.spaceMedium))
             Row {
                 SelectableButton(text = stringResource(R.string.low),
-                    isSelected = true,
+                    isSelected = activityLevelViewModel.selectedActivityLevel is ActivityLevel.Low,
                     color = MaterialTheme.colorScheme.primary,
                     selectedTextColor = MaterialTheme.colorScheme.onPrimary,
-                    onClick = { /*TODO*/ },
+                    onClick = {
+                        activityLevelViewModel.onActivityLevelClick(ActivityLevel.Low)
+                    },
                     textStyle = MaterialTheme.typography.titleSmall
                         .copy(fontWeight = FontWeight.Normal)
                 )
                 Spacer(modifier = Modifier.width(spacing.spaceMedium))
                 SelectableButton(text = stringResource(R.string.medium),
-                    isSelected = false,
+                    isSelected = activityLevelViewModel.selectedActivityLevel is ActivityLevel.Medium,
                     color = MaterialTheme.colorScheme.primary,
                     selectedTextColor = MaterialTheme.colorScheme.onPrimary,
-                    onClick = { /*TODO*/ },
+                    onClick = {
+                        activityLevelViewModel.onActivityLevelClick(ActivityLevel.Medium)
+                    },
                     textStyle = MaterialTheme.typography.titleSmall
                         .copy(fontWeight = FontWeight.Normal)
                 )
                 Spacer(modifier = Modifier.width(spacing.spaceMedium))
                 SelectableButton(text = stringResource(R.string.lose),
-                    isSelected = false,
+                    isSelected = activityLevelViewModel.selectedActivityLevel is ActivityLevel.High,
                     color = MaterialTheme.colorScheme.primary,
                     selectedTextColor = MaterialTheme.colorScheme.onPrimary,
-                    onClick = { /*TODO*/ },
+                    onClick = {
+                        activityLevelViewModel.onActivityLevelClick(ActivityLevel.High)
+                    },
                     textStyle = MaterialTheme.typography.titleSmall
                         .copy(fontWeight = FontWeight.Normal)
                 )
@@ -76,19 +99,19 @@ fun ActivityLevelScreen(onNextScreen: () -> Unit,) {
             }
         }
         ActionButton(text = stringResource(R.string.next)
-            , onClick = {onNextScreen()},
+            , onClick = activityLevelViewModel::onNextClick,
             modifier = Modifier.align(Alignment.BottomEnd),
         )
     }
 }
 
-@Preview(
-    showBackground = true,
-    showSystemUi = true
-)
-@Composable
-private fun ActivityLevelScreenPreview() {
-    PlatziCaloriesTheme {
-        ActivityLevelScreen(onNextScreen = {})
-    }
-}
+//@Preview(
+//    showBackground = true,
+//    showSystemUi = true
+//)
+//@Composable
+//private fun ActivityLevelScreenPreview() {
+//    PlatziCaloriesTheme {
+//        ActivityLevelScreen(onNextScreen = {})
+//    }
+//}
