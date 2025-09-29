@@ -79,6 +79,7 @@ fun NavigationRoot(
             }
             composable<WeightScreenRoute>{
                 WeightScreen(
+                    snackbarState = snackbarHostState,
                     weightViewModel = weightViewModel,
                     onNextScreen = {
                         navHostController.navigate(ActivityLevelScreenRoute)

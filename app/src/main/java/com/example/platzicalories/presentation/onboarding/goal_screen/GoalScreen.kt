@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -21,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.platzicalories.R
 import com.example.platzicalories.core.domain.model.GoalType
+import com.example.platzicalories.core.domain.util.UiEvent
 import com.example.platzicalories.presentation.onboarding.components.ActionButton
 import com.example.platzicalories.presentation.onboarding.components.SelectableButton
 import com.example.platzicalories.ui.theme.LocalSpacing
@@ -34,6 +36,15 @@ fun GoalScreen(
 
     val spacing = LocalSpacing.current
     val context = LocalContext.current
+
+    LaunchedEffect(key1 = true) {
+        goalViewModel.uiEvent.collect { event ->
+            when (event) {
+                is UiEvent.Success -> onNextScreen()
+                else -> Unit
+            }
+        }
+    }
 
     Box(
         modifier = Modifier
