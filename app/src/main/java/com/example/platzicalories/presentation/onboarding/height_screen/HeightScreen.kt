@@ -27,6 +27,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.platzicalories.R
 import com.example.platzicalories.core.domain.util.UiEvent
 import com.example.platzicalories.presentation.onboarding.components.ActionButton
@@ -37,7 +38,7 @@ import com.example.platzicalories.ui.theme.PlatziCaloriesTheme
 @Composable
 fun HeightScreen(
     snackbarHostState: SnackbarHostState,
-    heightViewModel: HeightViewModel,
+    heightViewModel: HeightViewModel = hiltViewModel(),
     onNextScreen: () -> Unit
 ){
     val spacing = LocalSpacing.current

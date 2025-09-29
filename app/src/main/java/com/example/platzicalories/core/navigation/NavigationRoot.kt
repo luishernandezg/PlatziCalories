@@ -9,42 +9,27 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.platzicalories.presentation.onboarding.activity_level_screen.ActivityLevelScreen
-import com.example.platzicalories.presentation.onboarding.activity_level_screen.ActivityLevelViewModel
 import com.example.platzicalories.presentation.onboarding.age_screen.AgeScreen
-import com.example.platzicalories.presentation.onboarding.age_screen.AgeViewModel
 import com.example.platzicalories.presentation.onboarding.gender_screen.GenderScreen
-import com.example.platzicalories.presentation.onboarding.gender_screen.GenderViewModel
 import com.example.platzicalories.presentation.onboarding.goal_screen.GoalScreen
-import com.example.platzicalories.presentation.onboarding.goal_screen.GoalViewModel
 import com.example.platzicalories.presentation.onboarding.height_screen.HeightScreen
-import com.example.platzicalories.presentation.onboarding.height_screen.HeightViewModel
 import com.example.platzicalories.presentation.onboarding.nutrient_screen.NutrientGoalScreen
-import com.example.platzicalories.presentation.onboarding.nutrient_screen.NutrientGoalViewModel
 import com.example.platzicalories.presentation.onboarding.weight_screen.WeightScreen
-import com.example.platzicalories.presentation.onboarding.weight_screen.WeightViewModel
 import com.example.platzicalories.presentation.onboarding.welcome.WelcomeScreen
 import com.example.platzicalories.presentation.tracker_overview.TrackerOverviewScreen
 
 @Composable
 fun NavigationRoot(
+    shouldShowOnboarding: Boolean,
     snackbarHostState: SnackbarHostState,
     navHostController: NavHostController
 ){
-    val genderViewModel = GenderViewModel()
-    val ageViewModel = AgeViewModel()
-    val heightViewModel = HeightViewModel()
-    val weightViewModel = WeightViewModel()
-    val activityLevelViewModel = ActivityLevelViewModel()
-    val goalViewModel = GoalViewModel()
-    val nutrientGoalViewModel = NutrientGoalViewModel()
-
-
     Box(
         modifier = Modifier.fillMaxSize()
     ){
         NavHost(
             navController = navHostController,
-            startDestination = WelcomeScreenRoute
+            startDestination = if(shouldShowOnboarding) WelcomeScreenRoute else TrackerOverviewScreenRoute
         ){
             composable<WelcomeScreenRoute>{
                 WelcomeScreen{
@@ -56,7 +41,6 @@ fun NavigationRoot(
                     onNextScreen = {
                         navHostController.navigate(AgeScreenRoute)
                     },
-                    genderViewModel = genderViewModel
                 )
             }
             composable<AgeScreenRoute>{
@@ -65,13 +49,11 @@ fun NavigationRoot(
                     onNextScreen = {
                         navHostController.navigate(HeightScreenRoute)
                     },
-                    ageViewModel = ageViewModel
                 )
             }
             composable<HeightScreenRoute>{
                 HeightScreen(
                     snackbarHostState = snackbarHostState,
-                    heightViewModel = heightViewModel,
                     onNextScreen = {
                         navHostController.navigate(WeightScreenRoute)
                     }
@@ -80,7 +62,6 @@ fun NavigationRoot(
             composable<WeightScreenRoute>{
                 WeightScreen(
                     snackbarState = snackbarHostState,
-                    weightViewModel = weightViewModel,
                     onNextScreen = {
                         navHostController.navigate(ActivityLevelScreenRoute)
                     }
@@ -91,12 +72,10 @@ fun NavigationRoot(
                     onNextScreen = {
                         navHostController.navigate(GoalScreenRoute)
                     },
-                    activityLevelViewModel = activityLevelViewModel
                 )
             }
             composable<GoalScreenRoute>{
                 GoalScreen(
-                    goalViewModel = goalViewModel,
                     onNextScreen = {
                         navHostController.navigate(NutrientGoalScreenRoute)
                     }
@@ -108,7 +87,6 @@ fun NavigationRoot(
                     onNextScreen = {
                         navHostController.navigate(TrackerOverviewScreenRoute)
                     },
-                    nutrientGoalViewModel = nutrientGoalViewModel
                 )
             }
             composable<TrackerOverviewScreenRoute>{

@@ -19,7 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.platzicalories.R
 import com.example.platzicalories.core.domain.model.Gender
 import com.example.platzicalories.core.domain.util.UiEvent
@@ -30,7 +30,7 @@ import com.example.platzicalories.ui.theme.PlatziCaloriesTheme
 
 @Composable
 fun GenderScreen(onNextScreen: () -> Unit,
-                 genderViewModel: GenderViewModel = viewModel()
+                 genderViewModel: GenderViewModel = hiltViewModel()
 ) {
 
     val spacing = LocalSpacing.current

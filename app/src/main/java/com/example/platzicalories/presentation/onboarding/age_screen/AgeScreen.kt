@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.platzicalories.R
 import com.example.platzicalories.core.domain.util.UiEvent
 import com.example.platzicalories.presentation.onboarding.components.ActionButton
@@ -27,7 +28,7 @@ import com.example.platzicalories.ui.theme.LocalSpacing
 fun AgeScreen(
     snackbarHostState: SnackbarHostState,
     onNextScreen: () -> Unit,
-    ageViewModel: AgeViewModel
+    ageViewModel: AgeViewModel = hiltViewModel()
 ){
     val spacing = LocalSpacing.current
     val context = LocalContext.current

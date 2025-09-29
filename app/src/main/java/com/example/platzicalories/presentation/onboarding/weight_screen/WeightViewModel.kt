@@ -6,15 +6,21 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.platzicalories.R
+import com.example.platzicalories.core.domain.preferences.Preferences
 import com.example.platzicalories.core.domain.use_case.FilterOutDigits
 import com.example.platzicalories.core.domain.util.UiEvent
 import com.example.platzicalories.core.domain.util.UiText
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class WeightViewModel: ViewModel() {
-    private val filterOutDigits = FilterOutDigits()
+@HiltViewModel
+class WeightViewModel @Inject constructor(
+    private val preferences: Preferences,
+    private val filterOutDigits: FilterOutDigits
+): ViewModel() {
     var weight by mutableStateOf("20")
         private set
 
@@ -29,7 +35,7 @@ class WeightViewModel: ViewModel() {
 
     fun onNextClick(){
         viewModelScope.launch {
-            weight.toIntOrNull() ?: kotlin.run {
+             val weightNumber = weight.toFloatOrNull() ?: kotlin.run {
                 _uiEvent.send(
                     UiEvent.ShowSnackbar(
                         UiText.StringResource(R.string.error_weight_cant_be_empty)
@@ -37,6 +43,7 @@ class WeightViewModel: ViewModel() {
                 )
                 return@launch
             }
+            preferences.saveWeight(weightNumber)
             _uiEvent.send(UiEvent.Success)
         }
     }

@@ -10,12 +10,17 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import androidx.lifecycle.viewModelScope
 import com.example.platzicalories.R
+import com.example.platzicalories.core.domain.preferences.Preferences
 import com.example.platzicalories.core.domain.util.UiText
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-
-class HeightViewModel: ViewModel() {
-    private val filterOutDigits = FilterOutDigits()
+@HiltViewModel
+class HeightViewModel @Inject constructor(
+    private val preferences: Preferences,
+    private val filterOutDigits: FilterOutDigits
+): ViewModel() {
     var height by mutableStateOf("20")
         private set
 
@@ -30,7 +35,7 @@ class HeightViewModel: ViewModel() {
 
     fun onNextClick(){
         viewModelScope.launch {
-            height.toIntOrNull() ?: kotlin.run {
+            val heightNumber = height.toIntOrNull() ?: kotlin.run {
                 _uiEvent.send(
                     UiEvent.ShowSnackbar(
                         UiText.StringResource(R.string.error_height_cant_be_empty)
@@ -38,6 +43,7 @@ class HeightViewModel: ViewModel() {
                 )
                 return@launch
             }
+            preferences.saveHeight(heightNumber)
             _uiEvent.send(UiEvent.Success)
         }
     }

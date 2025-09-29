@@ -19,18 +19,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.platzicalories.R
 import com.example.platzicalories.core.domain.model.ActivityLevel
 import com.example.platzicalories.core.domain.util.UiEvent
 import com.example.platzicalories.presentation.onboarding.components.ActionButton
 import com.example.platzicalories.presentation.onboarding.components.SelectableButton
 import com.example.platzicalories.ui.theme.LocalSpacing
-import com.example.platzicalories.ui.theme.PlatziCaloriesTheme
 
 @Composable
 fun ActivityLevelScreen(
-    activityLevelViewModel: ActivityLevelViewModel,
+    activityLevelViewModel: ActivityLevelViewModel = hiltViewModel(),
     onNextScreen: () -> Unit,
     ) {
 

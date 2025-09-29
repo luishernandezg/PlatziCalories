@@ -20,6 +20,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.platzicalories.R
 import com.example.platzicalories.core.domain.model.GoalType
 import com.example.platzicalories.core.domain.util.UiEvent
@@ -30,7 +31,7 @@ import com.example.platzicalories.ui.theme.PlatziCaloriesTheme
 
 @Composable
 fun GoalScreen(
-    goalViewModel: GoalViewModel,
+    goalViewModel: GoalViewModel = hiltViewModel(),
     onNextScreen: () -> Unit,
     ) {
 
