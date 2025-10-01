@@ -26,6 +26,7 @@ import java.time.LocalDate
 
 @Composable
 fun TrackerOverviewScreen(
+    onNavigateToSearch: () -> Unit,
     trackerOverviewViewModel: TrackerOverviewViewModel = hiltViewModel()
 ) {
     var spacing = LocalSpacing.current
@@ -46,7 +47,9 @@ fun TrackerOverviewScreen(
         items(defaultMeals){ meal ->
             ExpandableMeal(
                 meal = meal,
-                onToggleClick = { /*TODO*/ },
+                onToggleClick = {
+                    onNavigateToSearch()
+                },
                 content = {
                     Column(
                         modifier = Modifier
