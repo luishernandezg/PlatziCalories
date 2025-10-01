@@ -73,7 +73,6 @@ dependencies {
     //Coil3
     implementation(libs.coil.compose)
     implementation(libs.coil.compose.core)
-    implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
 
     //Moshi

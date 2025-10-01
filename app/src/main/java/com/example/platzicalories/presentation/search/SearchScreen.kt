@@ -3,19 +3,26 @@ package com.example.platzicalories.presentation.search
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.platzicalories.R
+import com.example.platzicalories.core.domain.util.UiEvent
 import com.example.platzicalories.presentation.search.components.SearchTextField
+import com.example.platzicalories.presentation.search.components.TrackableFoodItem
 import com.example.platzicalories.ui.theme.LocalSpacing
 import com.example.platzicalories.ui.theme.PlatziCaloriesTheme
 
@@ -29,8 +36,28 @@ fun SearchScreen(
     onNavigateUp: () -> Unit,
     searchViewModel: SearchViewModel = hiltViewModel()
 ){
+    val state = searchViewModel.state
     val spacing = LocalSpacing.current
+    val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
+
+    LaunchedEffect(key1 = keyboardController){
+        searchViewModel.uiEvent.collect{ event ->
+            when(event){
+                is UiEvent.ShowSnackbar -> {
+                    snackbarHostState.showSnackbar(
+                        message = event.message.asString(context = context)
+                    )
+                    keyboardController?.hide()
+                }
+                is UiEvent.NavigateUp -> {
+//                    onNavigateUp()
+                }
+                else -> Unit
+            }
+        }
+
+    }
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -43,17 +70,33 @@ fun SearchScreen(
         )
         Spacer(modifier = Modifier.height(spacing.spaceMedium))
         SearchTextField(
-            text = "",
-            onValueChange = {},
+            text = state.query,
+            onValueChange = {
+                searchViewModel.onEvent(SearchEvent.OnQueryChanged(it))
+            },
             shouldShowHint = true,
             onSearch = {
-                searchViewModel.executeSearch()
+                searchViewModel.onEvent(SearchEvent.OnSearch)
                 keyboardController?.hide()
                 // search view model
             },
-            onFocusChanged = {}
+            onFocusChanged = {
+                searchViewModel.onEvent(SearchEvent.OnSearchFocusChange(it.isFocused))
+            }
         )
         Spacer(modifier = Modifier.height(spacing.spaceMedium))
+        LazyColumn(modifier = Modifier.fillMaxSize()){
+            items(state.trackableFood){ food ->
+                TrackableFoodItem(
+                    trackableFoodUiState = food,
+                    onClick = {},
+                    onAmountChange = {},
+                    onTrack = {},
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+            }
+        }
     }
 }
 
