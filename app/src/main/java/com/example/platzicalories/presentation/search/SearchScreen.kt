@@ -25,10 +25,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.platzicalories.R
 import com.example.platzicalories.core.domain.util.UiEvent
+import com.example.platzicalories.domain.tracker.model.MealType
 import com.example.platzicalories.presentation.search.components.SearchTextField
 import com.example.platzicalories.presentation.search.components.TrackableFoodItem
 import com.example.platzicalories.ui.theme.LocalSpacing
 import com.example.platzicalories.ui.theme.PlatziCaloriesTheme
+import java.time.LocalDate
 
 @Composable
 fun SearchScreen(
@@ -85,7 +87,8 @@ fun SearchScreen(
             },
             onFocusChanged = {
                 searchViewModel.onEvent(SearchEvent.OnSearchFocusChange(it.isFocused))
-            }
+            },
+
         )
         Spacer(modifier = Modifier.height(spacing.spaceMedium))
         LazyColumn(modifier = Modifier.fillMaxSize()){
@@ -95,8 +98,24 @@ fun SearchScreen(
                     onClick = {
                         searchViewModel.onEvent(SearchEvent.OnToggleTrackableFood(food.food))
                     },
-                    onAmountChange = {},
-                    onTrack = {},
+                    onAmountChange = {
+                        searchViewModel.onEvent(
+                            SearchEvent.OnAmountForFoodChange(
+                                food = food.food,
+                                amount = it
+                            )
+                        )
+                    },
+                    onTrack = {
+                        keyboardController?.hide()
+                        searchViewModel.onEvent(
+                            SearchEvent.OnTrackFoodClick(
+                                food = food.food,
+                                mealType = MealType.fromString(mealName),
+                                date = LocalDate.of(year, month, dayOfMonth)
+                            )
+                        )
+                    },
                     modifier = Modifier.fillMaxWidth()
                 )
             }

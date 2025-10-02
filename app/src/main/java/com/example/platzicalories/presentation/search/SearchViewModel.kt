@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.platzicalories.R
+import com.example.platzicalories.core.domain.use_case.FilterOutDigits
 import com.example.platzicalories.core.domain.util.UiEvent
 import com.example.platzicalories.core.domain.util.UiText
 import com.example.platzicalories.domain.tracker.usecase.TrackerUseCases
@@ -19,7 +20,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val trackerUseCases: TrackerUseCases
+    private val trackerUseCases: TrackerUseCases,
+    private val filterOutDigits: FilterOutDigits
 ): ViewModel(){
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
@@ -48,7 +50,17 @@ class SearchViewModel @Inject constructor(
                     isHintVisible = !event.isFocused && state.query.isBlank()
                 )
             }
-            else -> Unit
+            is SearchEvent.OnAmountForFoodChange -> {
+                state = state.copy(
+                    trackableFood = state.trackableFood.map {
+                        if (it.food == event.food) {
+                            it.copy(amount = filterOutDigits(event.amount))
+                        } else it
+                    })
+            }
+            is SearchEvent.OnTrackFoodClick -> {
+                trackFood(event)
+            }
         }
     }
 
@@ -80,6 +92,19 @@ class SearchViewModel @Inject constructor(
                     )
                 }
 
+        }
+    }
+
+    private fun trackFood(event: SearchEvent.OnTrackFoodClick) {
+        viewModelScope.launch {
+            val uiState = state.trackableFood.find { it.food == event.food }
+            trackerUseCases.trackFoodUseCase(
+                food = uiState?.food ?: return@launch,
+                amount = uiState.amount.toIntOrNull() ?: return@launch,
+                mealType = event.mealType,
+                date = event.date
+            )
+            _uiEvent.send(UiEvent.NavigateUp)
         }
     }
 }
