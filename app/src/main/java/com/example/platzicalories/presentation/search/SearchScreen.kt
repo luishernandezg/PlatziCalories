@@ -55,12 +55,11 @@ fun SearchScreen(
                     keyboardController?.hide()
                 }
                 is UiEvent.NavigateUp -> {
-//                    onNavigateUp()
+                    onNavigateUp()
                 }
                 else -> Unit
             }
         }
-
     }
 
     Column(

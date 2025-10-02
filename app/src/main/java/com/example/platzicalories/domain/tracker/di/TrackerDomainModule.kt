@@ -3,6 +3,7 @@ package com.example.platzicalories.domain.tracker.di
 import com.example.platzicalories.core.domain.preferences.Preferences
 import com.example.platzicalories.domain.tracker.repository.TrackerRepository
 import com.example.platzicalories.domain.tracker.usecase.SearchFoodUseCase
+import com.example.platzicalories.domain.tracker.usecase.TrackFoodUseCase
 import com.example.platzicalories.domain.tracker.usecase.TrackerUseCases
 import dagger.Module
 import dagger.Provides
@@ -21,8 +22,8 @@ object TrackerDomainModule {
 //        preferences: Preferences
     ): TrackerUseCases {
         return TrackerUseCases(
+            trackFoodUseCase = TrackFoodUseCase(trackerRepository),
             searchFoodUseCase = SearchFoodUseCase(trackerRepository),
-
         )
     }
 }

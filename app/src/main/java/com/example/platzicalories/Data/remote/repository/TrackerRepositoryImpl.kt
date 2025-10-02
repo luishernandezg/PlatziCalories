@@ -1,12 +1,16 @@
 package com.example.platzicalories.Data.remote.repository
 import android.util.Log
+import com.example.platzicalories.Data.local.dao.TrackerDao
+import com.example.platzicalories.Data.local.mapper.toTrackedFoodEntity
 import com.example.platzicalories.Data.remote.api.OpenFoodApi
 import com.example.platzicalories.Data.remote.mapper.toTrackableFood
 import com.example.platzicalories.domain.tracker.model.TrackableFood
+import com.example.platzicalories.domain.tracker.model.TrackedFood
 import com.example.platzicalories.domain.tracker.repository.TrackerRepository
 
 class TrackerRepositoryImpl(
-    private val api: OpenFoodApi
+    private val api: OpenFoodApi,
+    private val dao: TrackerDao
 ): TrackerRepository {
     override suspend fun searchFood(
         query: String,
@@ -46,5 +50,9 @@ class TrackerRepositoryImpl(
             Result.failure(e)
         }
 
+    }
+
+    override suspend fun insertTrackedFood(food: TrackedFood) {
+        dao.insertTrackedFood(food.toTrackedFoodEntity())
     }
 }
