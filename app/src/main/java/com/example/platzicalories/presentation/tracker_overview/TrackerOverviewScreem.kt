@@ -14,8 +14,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.platzicalories.R
+import com.example.platzicalories.presentation.tracker_overview.components.AddButton
 import com.example.platzicalories.presentation.tracker_overview.components.DaySelector
 import com.example.platzicalories.presentation.tracker_overview.components.ExpandableMeal
 import com.example.platzicalories.presentation.tracker_overview.components.NutrientHeader
@@ -30,6 +33,7 @@ fun TrackerOverviewScreen(
     trackerOverviewViewModel: TrackerOverviewViewModel = hiltViewModel()
 ) {
     var spacing = LocalSpacing.current
+    val state = trackerOverviewViewModel.state
     LazyColumn(
         modifier = Modifier.fillMaxSize().padding(bottom = spacing.spaceMedium)
 
@@ -44,18 +48,32 @@ fun TrackerOverviewScreen(
                 modifier = Modifier.fillMaxWidth().padding(horizontal = spacing.spaceMedium)
             )
         }
-        items(defaultMeals){ meal ->
+        items(state.meals){ meal ->
             ExpandableMeal(
                 meal = meal,
                 onToggleClick = {
-                    onNavigateToSearch()
+                    trackerOverviewViewModel.onEvent(TrackerOverviewEvent.OnToggleMealClick(meal))
                 },
                 content = {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding( horizontal = spacing.spaceMedium),
-                    ) { }
+                    ) {
+                        val foods = state.trackedFoods.filter {
+                            it.mealType == meal.mealType
+                        }
+                        foods.forEach { food ->
+                            Spacer(modifier = Modifier.height(spacing.spaceMedium))
+                        }
+                        AddButton(
+                            text = stringResource(R.string.add),
+                            onClick = {
+                                onNavigateToSearch()
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
                 },
 //                modifier = Modifier.fillMaxWidth()
             )

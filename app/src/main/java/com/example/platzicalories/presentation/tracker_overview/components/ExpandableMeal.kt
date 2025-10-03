@@ -114,7 +114,9 @@ fun ExpandableMeal(
                 }
             }
             Spacer(modifier = Modifier.height(spacing.spaceMedium))
+
         }
+        if (meal.isExpanded) content()
     }
 
 
@@ -132,10 +134,13 @@ fun ExpandableMealPreview(){
                 carbs = 50,
                 protein = 50,
                 fat = 10,
-                calories = 500
+                calories = 500,
+                isExpanded = true
             ),
             onToggleClick = {},
-            content = {}
+            content = {
+                Text(text = "HOLA")
+            }
         )
     }
 }
