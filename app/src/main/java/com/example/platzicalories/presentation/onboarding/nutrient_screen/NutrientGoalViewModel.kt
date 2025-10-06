@@ -19,7 +19,7 @@ import javax.inject.Inject
 class NutrientGoalViewModel @Inject constructor(
     private val preferences: Preferences,
     private val filterOutDigits: FilterOutDigits,
-//    private val validateNutrients: ValidateNutrients
+    private val validateNutrients: ValidateNutrients
 ) : ViewModel() {
 
 
@@ -50,8 +50,26 @@ class NutrientGoalViewModel @Inject constructor(
             }
 
             is NutrientGoalEvent.OnNextClick -> {
-                viewModelScope.launch {
-                    _uiEvent.send(UiEvent.Success)
+                val result = validateNutrients(
+                    carbsRatioText = state.carbsRatio,
+                    proteinRatioText = state.proteinRatio,
+                    fatRatioText = state.fatRatio
+                )
+                when (result) {
+                    is ValidateNutrients.Result.Success -> {
+                        preferences.saveCarbRatio(result.carbsRatio)
+                        preferences.saveProteinRatio(result.proteinRatio)
+                        preferences.saveFatRatio(result.fatRatio)
+                        viewModelScope.launch {
+                            _uiEvent.send(UiEvent.Success)
+                        }
+                    }
+
+                    is ValidateNutrients.Result.Error -> {
+                        viewModelScope.launch {
+                            _uiEvent.send(UiEvent.ShowSnackbar(result.message))
+                        }
+                    }
                 }
             }
 //            is NutrientGoalEvent.OnNextClick -> {

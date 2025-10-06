@@ -43,7 +43,7 @@ fun DaySelector(
             text = ParseDayText(date = date),
             style = MaterialTheme.typography.titleLarge,
             )
-        IconButton(onClick = onPreviousDayClick) {
+        IconButton(onClick = onNextDayClick) {
             Icon(
                 imageVector = Icons.Default.ArrowForward,
                 contentDescription = stringResource(id = R.string.next_day)

@@ -56,7 +56,7 @@ fun NavigationRoot(
                 HeightScreen(
                     snackbarHostState = snackbarHostState,
                     onNextScreen = {
-                        navHostController.navigate(WeightScreenRoute)
+                        navHostController.navigate(ActivityLevelScreenRoute)
                     }
                 )
             }
@@ -92,18 +92,26 @@ fun NavigationRoot(
             }
             composable<TrackerOverviewScreenRoute>{
                 TrackerOverviewScreen(
-                    onNavigateToSearch = {
-                        navHostController.navigate(SearchScreenRoute)
+                    onNavigateToSearch = { mealName, dayOfMonth, month, year ->
+                        navHostController.navigate(
+                            SearchScreenRoute(mealName, dayOfMonth, month, year)
+                        )
                     }
+
                 )
             }
-            composable<SearchScreenRoute>{
+            composable<SearchScreenRoute>{ navBackStackEntry ->
+                val arg = navBackStackEntry.arguments
+                val mealName = arg?.getString("mealName") ?: ""
+                val dayOfMonth = arg?.getInt("dayOfMonth") ?: 0
+                val month = arg?.getInt("month") ?: 0
+                val year = arg?.getInt("year") ?: 0
                 SearchScreen(
                     snackbarHostState = snackbarHostState,
-                    mealName = "Breakfast",
-                    dayOfMonth = 1,
-                    month = 1,
-                    year = 2022,
+                    mealName = mealName,
+                    dayOfMonth = dayOfMonth,
+                    month = month,
+                    year = year,
                     onNavigateUp = {
                         navHostController.navigateUp()
                     }

@@ -17,9 +17,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.platzicalories.R
+import com.example.platzicalories.presentation.tracker_overview.TrackerOverviewState
 import com.example.platzicalories.ui.theme.FatColor
 import com.example.platzicalories.ui.theme.LocalSpacing
 import com.example.platzicalories.ui.theme.PlatziCaloriesTheme
@@ -28,11 +31,12 @@ import com.example.platzicalories.ui.theme.tertiaryDark
 
 @Composable
 fun NutrientHeader(
- modifier: Modifier = Modifier
+    state: TrackerOverviewState,
+    modifier: Modifier = Modifier
 ){
-    var spacing = LocalSpacing.current
+    val spacing = LocalSpacing.current
     val animatedCalorieCount = animateIntAsState(
-        targetValue = 2000,
+        targetValue = state.totalCalories,
 
 
     )
@@ -52,29 +56,26 @@ fun NutrientHeader(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             NutrientBarInfo(
-                value = 20,
-                goal = 100,
-                name = "Carbs",
+                value = state.totalCarbs,
+                goal = state.carbsGoal,
+                name = stringResource(id = R.string.carbs),
                 color = tertiaryDark,
                 modifier = Modifier.size(90.dp)
             )
             NutrientBarInfo(
-                value = 50,
-                goal = 150,
-                name = "Proteins",
+                value = state.totalProtein,
+                goal = state.proteinGoal,
+                name = stringResource(id = R.string.protein),
                 color = ProteinColor,
                 modifier = Modifier.size(90.dp)
             )
             NutrientBarInfo(
-                value = 300,
-                goal = 500,
-                name = "Fat",
+                value = state.totalFat,
+                goal = state.fatGoal,
+                name = stringResource(id = R.string.fat),
                 color = FatColor,
                 modifier = Modifier.size(90.dp)
             )
-
-
-
         }
         Spacer(modifier = Modifier.height(spacing.spaceSmall))
         Row(
@@ -98,7 +99,7 @@ fun NutrientHeader(
 
                 )
                 UnitDisplay(
-                    amount = 2550,
+                    amount = state.caloriesGoal,
                     unit = "kcal",
                     amountColor = MaterialTheme.colorScheme.onSecondary,
                     amountTextSize = 40.sp,
@@ -110,23 +111,25 @@ fun NutrientHeader(
         }
         Spacer(modifier = Modifier.height(spacing.spaceSmall))
         NutrientsBar(
-            carbs = 100,
-            protein = 200,
-            fat = 100,
-            calories = 2000,
-            calorieGoal = 3500,
-            modifier = Modifier.fillMaxWidth().height(30.dp)
+            carbs = state.totalCarbs,
+            protein = state.totalProtein,
+            fat = state.totalFat,
+            calories = state.totalCalories,
+            calorieGoal = state.caloriesGoal,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(30.dp)
         )
     }
 
 }
-@Preview(showBackground = true)
-@Composable
-fun NutrientHeaderPreview(){
-    PlatziCaloriesTheme{
-        NutrientHeader(
-
-        )
-    }
-
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun NutrientHeaderPreview(){
+//    PlatziCaloriesTheme{
+//        NutrientHeader(
+//
+//        )
+//    }
+//
+//}

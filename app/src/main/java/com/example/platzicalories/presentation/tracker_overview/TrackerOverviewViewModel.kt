@@ -56,26 +56,27 @@ class TrackerOverviewViewModel @Inject constructor(
                     }
                 )
             }
-//            is TrackerOverviewEvent.OnNextDayClick -> {
-//                state = state.copy(
-//                    date = state.date.plusDays(1)
-//                )
-//                executeSearch()
-//            }
-//            is TrackerOverviewEvent.OnPreviousDayClick -> {
-//                state = state.copy(
-//                    date = state.date.minusDays(1)
-//                )
-//                executeSearch()
-//            }
-//
-//            is TrackerOverviewEvent.OnDeleteTrackedFoodClick -> {
-//                viewModelScope.launch {
-//                    trackerUseCases.deleteTrackedFoodUseCase(event.trackedFood)
-//                    refreshFoods()
-//                }
-//            }
-            else -> {}
+            is TrackerOverviewEvent.OnNextDayClick -> {
+                Log.d("TAG", "OnNextDayClick")
+                state = state.copy(
+                    date = state.date.plusDays(1)
+                )
+                refreshFoods()
+            }
+            is TrackerOverviewEvent.OnPreviousDayClick -> {
+                Log.d("TAG", "OnPreviousDayClick")
+                state = state.copy(
+                    date = state.date.minusDays(1)
+                )
+                refreshFoods()
+            }
+
+            is TrackerOverviewEvent.OnDeleteTrackedFoodClick -> {
+                viewModelScope.launch {
+                    trackerUseCases.deleteTrackedFoodUseCase(event.trackedFood)
+                    refreshFoods()
+                }
+            }
         }
     }
 

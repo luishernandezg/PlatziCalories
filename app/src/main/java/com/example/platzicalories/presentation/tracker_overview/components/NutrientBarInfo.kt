@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import com.example.platzicalories.R
 import com.example.platzicalories.ui.theme.PlatziCaloriesTheme
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.unit.Dp
 
 @Composable
 fun NutrientBarInfo(
@@ -31,38 +32,38 @@ fun NutrientBarInfo(
     goal: Int,
     name: String,
     color: Color,
-    modifier: Modifier = Modifier
-){
+    modifier: Modifier = Modifier,
+    strokeWidth: Dp = 8.dp,
+) {
     val background = MaterialTheme.colorScheme.onSurfaceVariant
     val goalExceededColor = MaterialTheme.colorScheme.error
-    val angleRatio = remember{
+    val angleRatio = remember {
         Animatable(0f)
     }
     LaunchedEffect(key1 = value) {
         angleRatio.animateTo(
-            targetValue = if (goal > 0 ){
+            targetValue = if (goal > 0) {
                 value / goal.toFloat()
-            }else{
-                0f
-            },
+            } else 0f,
             animationSpec = tween(
                 durationMillis = 300
             )
         )
     }
-
     Box(
         modifier = modifier,
         contentAlignment = Alignment.Center
-    ){
+    ) {
         Canvas(
-            modifier = Modifier.fillMaxWidth()
-                .aspectRatio(1f)
-        ){
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(1f),
+        ) {
+            // Cambié de circulares a rectángulos con esquinas redondeadas
             drawRoundRect(
-                color = if (value <= goal) background else goalExceededColor,
+                color = if(value <= goal) background else goalExceededColor,
                 size = size,
-                cornerRadius = CornerRadius.Zero
+                cornerRadius = CornerRadius.Zero // O usa valores como `20f` para más redondeo
             )
             if(value <= goal) {
                 drawRoundRect(
@@ -82,28 +83,29 @@ fun NutrientBarInfo(
             UnitDisplay(
                 amount = value,
                 unit = stringResource(id = R.string.grams),
-                amountColor = if (value <= goal) MaterialTheme.colorScheme.onSecondary
-                else goalExceededColor,
-                unitColor = if (value <= goal) MaterialTheme.colorScheme.onSecondary
-                else goalExceededColor,
+                amountColor = if(value <= goal) {
+                    MaterialTheme.colorScheme.onSecondary
+                } else goalExceededColor,
+                unitColor = if(value <= goal) {
+                    MaterialTheme.colorScheme.onSecondary
+                } else goalExceededColor
             )
             Text(
                 text = name,
-                color = if (value <= goal) MaterialTheme.colorScheme.onSecondary
-                else goalExceededColor,
+                color = if(value <= goal) {
+                    MaterialTheme.colorScheme.onSecondary
+                } else goalExceededColor,
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Light
             )
         }
     }
-
-
 }
 
-@Preview(showBackground = true)
+@Preview (showBackground = true)
 @Composable
-fun NutrientBarInfoPreview(){
-    PlatziCaloriesTheme{
+private fun NutrientsBarInfoPreview() {
+    PlatziCaloriesTheme {
         NutrientBarInfo(
             value = 100,
             goal = 200,
@@ -112,5 +114,4 @@ fun NutrientBarInfoPreview(){
             modifier = Modifier.size(90.dp)
         )
     }
-
 }

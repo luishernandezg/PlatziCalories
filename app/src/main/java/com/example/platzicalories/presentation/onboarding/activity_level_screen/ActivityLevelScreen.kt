@@ -84,7 +84,7 @@ fun ActivityLevelScreen(
                         .copy(fontWeight = FontWeight.Normal)
                 )
                 Spacer(modifier = Modifier.width(spacing.spaceMedium))
-                SelectableButton(text = stringResource(R.string.lose),
+                SelectableButton(text = stringResource(R.string.high),
                     isSelected = activityLevelViewModel.selectedActivityLevel is ActivityLevel.High,
                     color = MaterialTheme.colorScheme.primary,
                     selectedTextColor = MaterialTheme.colorScheme.onPrimary,
